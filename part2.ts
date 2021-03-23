@@ -22,22 +22,14 @@ export const runLengthEncoding: (str: string) => string = (str: string) => {
 }
 
 /* Question 3 */
-export const removeFromArray : ( openChar:string ,closeChar :string ,arr : string[])=> string[] = (openChar:string ,closeChar :string, arr: string[]) => {
-    const indexO = arr.indexOf(openChar);
-    const indexC = arr.indexOf(closeChar);
-    if (indexC < indexO) //check the closer parentheses is after the open parentheses 
-       return arr;
-    return R.slice(0,indexC,arr).concat(R.slice(indexC+1,Infinity,arr));
-}
-
 export const isPaired : (str: string) => boolean = (str:string) => {
-    const arr = stringToArray(str);
-    const newArr = arr.reduce((acc, cur) => cur==='(' ? removeFromArray ('(',')',arr) : acc , "");
-    console.log(newArr);
-    if (R.includes(')',newArr))
+    const onlyParen = stringToArray(str).filter(x => x==='('||x==='['||x==='{'||x===')'||x===']'||x==='}');
+    const a = R.map (x => x === '(' ? (R.slice(onlyParen.indexOf(x),Infinity,onlyParen).indexOf(')') !== -1 ? '#':x):x, onlyParen);
+        // # - the char was ( , and it has a )
+    const b = R.map (x => x === '[' ? (R.slice(a.indexOf(x),Infinity,a).indexOf(']') !== -1 ? '#':x):x, a);
+    const c = R.map (x => x === '{' ? (R.slice(b.indexOf(x),Infinity,b).indexOf('}') !== -1 ? '#':x):x, b);
+
+    if (R.includes('(',c) || R.includes('{',c) || R.includes('[',c) || c.filter(x => x==='#').length !== c.length/2)
         return false;
     return true;
 }
-
-console.log(isPaired("(rotem)"));
-console.log(isPaired("()rotem()"));
